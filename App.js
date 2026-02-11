@@ -1,20 +1,28 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import {Ionicons , FontAwesome} from '@expo/vector-icons';
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+  <View>
+   <SafeAreaView>
+    <StatusBar style='auto'></StatusBar>
+     <View style={styles.buttonContainer}>
+      <Button title=''></Button>
+      <Ionicons name='add-outline' size={24} color='black'>
+        Add weather
+      </Ionicons>
+      {/* <FontAwesome name='cloud' size={24} color='black'></FontAwesome> */}
     </View>
+   </SafeAreaView>
+  </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+ buttonContainer:{
+  margin:20,
+ }
 });

@@ -1,40 +1,66 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {Ionicons , FontAwesome} from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react'; // FIXED: Added import
+
 import PrimaryButton from './components/PrimaryButton';
 import AddWeatherModal from './components/AddWeatherModal';
 
-
 export default function App() {
-const [isModalOpen , setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  function handleWeather() {
+    setIsModalOpen(true);
+  }
 
-function handleWeather(){
-  setIsModalOpen(true);
-}
+  function handleCloseModal() {
+    setIsModalOpen(false);
+  }
 
-function handleCloseModal(){
-  setIsModalOpen(false);
-}
   return (
-  <View>
-   <SafeAreaView>
-    <StatusBar style='auto'></StatusBar>
-     <View >
-      <PrimaryButton onPress={handleWeather}>
-        <Ionicons name='add-outline' size={24}></Ionicons>
-        <Text style={{fontSize:24}}>Add Weather</Text>
-      </PrimaryButton>
-    </View>
-    <View>
-      {isModalOpen && <AddWeatherModal open={isModalOpen} onClose={handleCloseModal}></AddWeatherModal>}
-    </View>
-   </SafeAreaView>
-  </View>
+    // SafeAreaView usually acts as the root container
+    <SafeAreaView style={styles.rootContainer}>
+      <StatusBar style='dark' />
+      
+      <View style={styles.mainContent}>
+        <Text style={styles.welcomeText}>Weather App</Text>
+        
+        <PrimaryButton onPress={handleWeather}>
+          <Ionicons name='add-outline' size={24} color="white" />
+          <Text style={styles.buttonText}>Add Weather</Text>
+        </PrimaryButton>
+      </View>
+
+      {/* Conditional rendering isn't strictly necessary with Modal 'visible' prop,
+        but it helps performance to unmount it when closed.
+      */}
+      {isModalOpen && (
+        <AddWeatherModal open={isModalOpen} onClose={handleCloseModal} />
+      )}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-
+  rootContainer: {
+    flex: 1, // Fill the whole screen
+    backgroundColor: '#ffffff',
+  },
+  mainContent: {
+    flex: 1, // Fill available space inside SafeAreaView
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center', // Center horizontally
+  },
+  welcomeText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 20, // Add space between text and button
+    color: '#333',
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white', // Text inside the purple button should be white
+    marginLeft: 8, // Space between Icon and Text
+  },
 });

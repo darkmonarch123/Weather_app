@@ -1,56 +1,38 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '../utils/colors';
 
-// Define our specific palette here for easy usage
-const Theme = {
-  textPrimary: '#003366', // Dark Blue for text
-  cardBg: 'white',
-  accent: '#FFD700',      // Yellow
-  iconColor: '#FDB813',   // Sun/Icon Yellow
-};
-
-export default function WeatherCard({ weather }) {
-  // Helper to pick icon based on weather type
-  const getIconName = (type) => {
-    switch (type?.toLowerCase()) {
-      case 'sunny': return 'sunny';
-      case 'rainy': return 'rainy';
-      case 'cloudy': return 'cloudy';
-      default: return 'partly-sunny';
-    }
+export default function WeatherCard({ weather, onDelete }) {
+  
+  const formatTime = (offset) => {
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const local = new Date(utc + (offset * 1000));
+    return local.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
   return (
     <View style={styles.card}>
-      {/* Top Section: Icon and Temperature */}
-      <View style={styles.topRow}>
-        <View style={styles.mainInfo}>
-            <Ionicons name={getIconName(weather.type)} size={50} color={Theme.iconColor} />
-            <View style={styles.textContainer}>
-                <Text style={styles.cityText}>{weather.city}</Text>
-                <Text style={styles.typeText}>{weather.type}</Text>
-            </View>
+      <View style={styles.top}>
+        <View>
+          <Text style={styles.timeText}>{formatTime(weather.utcOffset)}</Text>
+          <Text style={styles.cityText}>{weather.city}</Text>
         </View>
-        <Text style={styles.tempText}>{weather.temperature}°</Text>
+        <Text style={styles.tempText}>{Math.round(weather.temperature)}°</Text>
       </View>
 
-      {/* Divider Line */}
       <View style={styles.divider} />
 
-      {/* Bottom Section: Humidity and Action Button */}
-      <View style={styles.bottomRow}>
-        <View style={styles.detailItem}>
-           <Ionicons name="water-outline" size={20} color="#4F8EF7" />
-           <Text style={styles.humidityText}>{weather.humdity}% Humidity</Text>
+      <View style={styles.bottom}>
+        <View style={styles.badge}>
+          <Text style={styles.typeText}>{weather.type}</Text>
         </View>
-
-        {/* Custom Yellow Accent Button */}
-        <Pressable 
-          style={({pressed}) => [styles.button, pressed && styles.pressed]}
-        >
-           <Text style={styles.buttonText}>See Forecast</Text>
-           <Ionicons name="arrow-forward" size={16} color={Theme.textPrimary} />
-        </Pressable>
+        <View style={styles.actions}>
+          <Text style={styles.windText}>{weather.wind} km/h</Text>
+          <Pressable onPress={onDelete}>
+            <Ionicons name="trash-outline" size={20} color="#FF5252" />
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -58,80 +40,24 @@ export default function WeatherCard({ weather }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Theme.cardBg,
-    borderRadius: 20,
-    marginVertical: 10,
+    backgroundColor: 'white',
     marginHorizontal: 20,
-    padding: 20,
-    // Shadow for depth
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
+    marginVertical: 8,
+    borderRadius: 20,
+    padding: 18,
+    elevation: 3,
+    shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowRadius: 5,
   },
-  topRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  mainInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 15, // Space between icon and text
-  },
-  textContainer: {
-    justifyContent: 'center',
-  },
-  cityText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: Theme.textPrimary,
-  },
-  typeText: {
-    fontSize: 14,
-    color: '#888',
-    textTransform: 'capitalize',
-  },
-  tempText: {
-    fontSize: 42,
-    fontWeight: '300',
-    color: Theme.textPrimary,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#F0F0F0',
-    marginVertical: 15,
-  },
-  bottomRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  detailItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  humidityText: {
-    color: '#666',
-    fontWeight: '500',
-  },
-  button: {
-    backgroundColor: Theme.accent, // Yellow Background
-    flexDirection: 'row',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 25, // Pill shape
-    alignItems: 'center',
-    gap: 5,
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  buttonText: {
-    color: Theme.textPrimary, // Dark Blue Text
-    fontWeight: 'bold',
-    fontSize: 14,
-  }
+  top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  timeText: { fontSize: 12, color: '#999', fontWeight: 'bold' },
+  cityText: { fontSize: 22, fontWeight: 'bold', color: Colors.darkBlue },
+  tempText: { fontSize: 38, fontWeight: '300', color: Colors.darkBlue },
+  divider: { height: 1, backgroundColor: '#f0f0f0', marginVertical: 12 },
+  bottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  badge: { backgroundColor: Colors.accent, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
+  typeText: { fontSize: 12, fontWeight: 'bold', color: Colors.darkBlue },
+  actions: { flexDirection: 'row', alignItems: 'center', gap: 15 },
+  windText: { fontSize: 12, color: '#666' }
 });

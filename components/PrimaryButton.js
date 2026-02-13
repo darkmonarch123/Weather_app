@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, View } from "react-native";
+import { Colors } from "../utils/colors";
 
 // We pass 'style' as a prop so we can override defaults from the parent if needed
 export default function PrimaryButton({ children, onPress, style }) {
@@ -23,6 +24,7 @@ export default function PrimaryButton({ children, onPress, style }) {
 
 const styles = StyleSheet.create({
   outerContainer: {
+     backgroundColor:Colors.primary,
     borderRadius: 28, // Rounded pill shape
     margin: 4,
     overflow: "hidden", // Clips the ripple effect to the border radius

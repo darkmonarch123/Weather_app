@@ -1,5 +1,6 @@
 const Colors = {
-     primary: 'blue',
-     secondary:'skyblue'
+     primary: 'black',
+     icon:'#4e0eff',
+     secondary:'black'
 }
 export {Colors};

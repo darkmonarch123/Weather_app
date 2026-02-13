@@ -1,11 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react'; // FIXED: Added import
 
 import PrimaryButton from './components/PrimaryButton';
 import AddWeatherModal from './components/AddWeatherModal';
+import { Colors } from './utils/colors';
+import { WeatherData } from './utils/initialData';
+import WeatherCard from './components/WeatherCard';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,13 +25,16 @@ export default function App() {
   return (
     // SafeAreaView usually acts as the root container
     <SafeAreaView style={styles.rootContainer}>
-      <StatusBar style='dark' />
+     <LinearGradient colors={[Colors.primary, Colors.secondary]} style={styles.screen}>
+       <StatusBar style='light' />
       
       <View style={styles.mainContent}>
+        {/* <Ionicons name="cloudy-night-outline" style={styles.icons} size={32}></Ionicons> */}
+          <Ionicons name='cloudy-night-outline' size={64} color={Colors.icon} />
         <Text style={styles.welcomeText}>Weather App</Text>
         
         <PrimaryButton onPress={handleWeather}>
-          <Ionicons name='add-outline' size={24} color="white" />
+          <Ionicons name='add-circle-outline' size={24} color="white" />
           <Text style={styles.buttonText}>Add Weather</Text>
         </PrimaryButton>
       </View>
@@ -35,17 +42,26 @@ export default function App() {
       {/* Conditional rendering isn't strictly necessary with Modal 'visible' prop,
         but it helps performance to unmount it when closed.
       */}
-      {isModalOpen && (
+      <View>
+        {isModalOpen && (
         <AddWeatherModal open={isModalOpen} onClose={handleCloseModal} />
       )}
+      </View>
+      <View>
+        <FlatList data={WeatherData} renderItem={(itemData)=>{return <WeatherCard weather={itemData.item} />}} keyExtractor={(item)=> item.id}></FlatList>
+      </View>
+     </LinearGradient>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  screen:{
+    flex:1
+  },
   rootContainer: {
     flex: 1, // Fill the whole screen
-    backgroundColor: '#ffffff',
+    backgroundColor: Colors.primary,
   },
   mainContent: {
     flex: 1, // Fill available space inside SafeAreaView
@@ -63,4 +79,8 @@ const styles = StyleSheet.create({
     color: 'white', // Text inside the purple button should be white
     marginLeft: 8, // Space between Icon and Text
   },
+  icon:{
+    color: Colors.secondary,
+    marginBottom: 16, // Space between icon and text
+  }
 });

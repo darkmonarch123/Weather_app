@@ -1,10 +1,12 @@
-import { Modal, Text, View, StyleSheet, SafeAreaView } from "react-native";
+import { Modal, Text, View, StyleSheet} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import PrimaryButton from "./PrimaryButton";
 import { Ionicons } from '@expo/vector-icons';
 
 // Assuming you have a utils folder, otherwise hardcode a number like 24
-// import { fontSize } from "../utils/fontSize"; 
-const fontSize = { icon1: 24 }; 
+import { fontSize } from "../utils/fontSize"; 
+import { Colors } from "../utils/colors";
+// const fontSize = { icon1: 24 }; 
 
 export default function AddWeatherModal({ open, onClose }) {
   return (
@@ -18,7 +20,7 @@ export default function AddWeatherModal({ open, onClose }) {
           {/* We wrap the close button to control its size */}
           <View style={styles.closeButtonWrapper}>
             <PrimaryButton onPress={onClose} style={styles.smallButton}>
-               <Ionicons name='close-outline' size={fontSize.icon1} color="white" />
+               <Ionicons name='close-outline' size={12} color="white" />
             </PrimaryButton>
           </View>
         </View>
@@ -36,7 +38,7 @@ export default function AddWeatherModal({ open, onClose }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1, // Takes up the full height of the Modal
-    backgroundColor: '#f0f0f0', // Light grey background
+    backgroundColor: Colors.primary, // Light grey background
   },
   header: {
     padding: 16,
@@ -54,9 +56,11 @@ const styles = StyleSheet.create({
   },
   smallButton: {
     // We can override PrimaryButton styles here!
-    borderRadius: 20, 
+    borderRadius: 100, 
+    width:55,
+    height:45,
     elevation: 0, // Remove shadow for a flatter look if desired
-    backgroundColor: '#ff4444', // Red close button
+    backgroundColor: Colors.icon, // Red close button
   },
   content: {
     flex: 1,

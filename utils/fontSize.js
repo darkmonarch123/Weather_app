@@ -5,3 +5,4 @@ const fontSize = {
 }
 
 export {fontSize};
+<ion-icon name="cloudy-night-outline"></ion-icon>

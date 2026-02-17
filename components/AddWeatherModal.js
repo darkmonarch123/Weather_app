@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { 
+  Modal, 
+  View, 
+  Text, 
+  TextInput, 
+  StyleSheet, 
+  TouchableOpacity, 
+  KeyboardAvoidingView, 
+  Platform 
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '../utils/colors';
 
 export default function AddWeatherModal({ visible, onClose, onSearch }) {
   const [inputText, setInputText] = useState('');
@@ -14,28 +22,37 @@ export default function AddWeatherModal({ visible, onClose, onSearch }) {
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
+    <Modal 
+      visible={visible} 
+      animationType="slide" 
+      transparent={true} 
+      onRequestClose={onClose}
+    >
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.modalOverlay}
       >
         <View style={styles.modalContent}>
+          {/* Top Drag Handle Indicator */}
+          <View style={styles.dragHandle} />
+
           <View style={styles.header}>
             <Text style={styles.title}>Add City</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={24} color="#333" />
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Ionicons name="close" size={24} color="#A0A0B0" />
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.label}>Type a city name:</Text>
+          <Text style={styles.label}>Search for a location</Text>
           
           <TextInput 
             style={styles.input}
             placeholder="e.g. New York, London"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666677"
             value={inputText}
             onChangeText={setInputText}
             autoFocus={true}
+            keyboardAppearance="dark"
           />
 
           <TouchableOpacity style={styles.button} onPress={handlePress}>
@@ -50,52 +67,75 @@ export default function AddWeatherModal({ visible, onClose, onSearch }) {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent background
-    justifyContent: 'center',
-    padding: 20
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Slightly darker overlay
+    justifyContent: 'flex-end', // Pushes the modal to the bottom
   },
   modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 20,
-    elevation: 5,
+    backgroundColor: '#1C1C22', // Dark background matching your UI image
+    borderTopLeftRadius: 32, // Large rounded corners at the top
+    borderTopRightRadius: 32,
+    paddingHorizontal: 24,
+    paddingTop: 12,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 24, // Extra padding for iOS home indicator
+    width: '100%',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 20,
+  },
+  dragHandle: {
+    width: 40,
+    height: 5,
+    backgroundColor: '#383842',
+    borderRadius: 3,
+    alignSelf: 'center',
+    marginBottom: 20,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 24,
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333'
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#FFFFFF', // White text for dark mode
+  },
+  closeButton: {
+    backgroundColor: '#2A2A35',
+    padding: 6,
+    borderRadius: 20,
   },
   label: {
-    marginBottom: 10,
-    color: '#666'
+    marginBottom: 12,
+    color: '#A0A0B0', // Subtle gray
+    fontSize: 15,
+    fontWeight: '500',
   },
   input: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 12,
-    padding: 15,
+    backgroundColor: '#2A2A35', // Darker input field background
+    borderRadius: 16,
+    padding: 16,
     fontSize: 16,
-    color: '#000', // IMPORTANT: Ensures text is black
-    marginBottom: 20
+    color: '#FFFFFF', // White text for typing
+    marginBottom: 24,
   },
   button: {
-    backgroundColor: Colors.primary,
-    padding: 15,
-    borderRadius: 12,
-    alignItems: 'center'
+    backgroundColor: '#4E90FF', // The vibrant blue from the image UI
+    padding: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    shadowColor: '#4E90FF',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   }
 });

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, FlatList, Alert, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Alert, ActivityIndicator, SafeAreaView, TouchableOpacity, Switch } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-
+import { RefreshControl } from 'react-native';
 import { Colors } from './utils/colors';
 import WeatherCard from './components/WeatherCard';
 import AddWeatherModal from './components/AddWeatherModal';
@@ -43,6 +43,21 @@ export default function App() {
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(weatherList));
     }
   }, [weatherList, isInitialLoad]);
+
+  const onRefresh = async ()=>{
+    setLoading(true);
+    try{
+      for(let i=0;i<weatherList.length;i++){
+        const w = weatherList[i];
+        await fetchWeather(w.latitude, w.longitude, w.city);
+        handleAutoDetect(); // Refresh current location weather as well
+      }
+    } catch (err) {
+      console.log("Error refreshing:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   // 3. MAIN FETCH FUNCTION
   const fetchWeather = async (lat, lon, providedName = null) => {
@@ -144,10 +159,25 @@ export default function App() {
     return "Partly Sunny";
   };
 
+  //DYNAMIC BACKGROUND BASED ON WEATHER
+  const getBackgroundColors = () => {
+    switch(weatherList[0]?.type) {
+      case "Sunny":
+        return ['#FFD700', '#FFA500'];
+      case "Cloudy":
+        return ['#A9A9A9', '#808080'];
+      case "Rainy":
+        return ['#4682B4', '#36648B'];
+      default:
+        return [Colors.primary, Colors.secondary];
+    }
+  };
+
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      <LinearGradient colors={[Colors.primary, Colors.secondary]} style={styles.background}>
+      <LinearGradient colors={weatherList.length > 0 ? getBackgroundColors(weatherList[0].type) : [Colors.primary, Colors.secondary]}  style={styles.background}>
         <SafeAreaView style={styles.safeArea}>
           
           <View style={styles.header}>
@@ -170,6 +200,7 @@ export default function App() {
 
           <FlatList
             data={weatherList}
+            RefreshControl={<RefreshControl refreshing={loading} onRefresh={onRefresh} tintColor="white" />}
             keyExtractor={item => item.id}
             renderItem={({ item }) => (
               <WeatherCard 

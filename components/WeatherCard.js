@@ -1,38 +1,38 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../utils/colors';
 
 export default function WeatherCard({ weather, onDelete }) {
-  
-  const formatTime = (offset) => {
-    const now = new Date();
-    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-    const local = new Date(utc + (offset * 1000));
-    return local.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const getIcon = (type) => {
+    switch(type) {
+      case 'Sunny': return 'sunny';
+      case 'Rainy': return 'rainy';
+      case 'Cloudy': return 'cloudy';
+      default: return 'partly-sunny';
+    }
   };
 
   return (
     <View style={styles.card}>
-      <View style={styles.top}>
+      <View style={styles.row}>
         <View>
-          <Text style={styles.timeText}>{formatTime(weather.utcOffset)}</Text>
-          <Text style={styles.cityText}>{weather.city}</Text>
+          <Text style={styles.city}>{weather.city}</Text>
+          <Text style={styles.type}>{weather.type}</Text>
         </View>
-        <Text style={styles.tempText}>{Math.round(weather.temperature)}°</Text>
+        <Text style={styles.temp}>{Math.round(weather.temperature)}°</Text>
       </View>
-
+      
       <View style={styles.divider} />
-
-      <View style={styles.bottom}>
-        <View style={styles.badge}>
-          <Text style={styles.typeText}>{weather.type}</Text>
+      
+      <View style={styles.footer}>
+        <View style={styles.info}>
+          <Ionicons name={getIcon(weather.type)} size={16} color="white" />
+          <Text style={styles.infoText}>Wind: {weather.wind} km/h</Text>
         </View>
-        <View style={styles.actions}>
-          <Text style={styles.windText}>{weather.wind} km/h</Text>
-          <Pressable onPress={onDelete}>
-            <Ionicons name="trash-outline" size={20} color="#FF5252" />
-          </Pressable>
-        </View>
+        <TouchableOpacity onPress={onDelete}>
+          <Ionicons name="trash-outline" size={20} color="rgba(255,255,255,0.7)" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -40,24 +40,20 @@ export default function WeatherCard({ weather, onDelete }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
-    marginHorizontal: 20,
-    marginVertical: 8,
+    backgroundColor: 'rgba(255,255,255,0.15)',
     borderRadius: 20,
-    padding: 18,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    padding: 20,
+    marginHorizontal: 20,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
   },
-  top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  timeText: { fontSize: 12, color: '#999', fontWeight: 'bold' },
-  cityText: { fontSize: 22, fontWeight: 'bold', color: Colors.darkBlue },
-  tempText: { fontSize: 38, fontWeight: '300', color: Colors.darkBlue },
-  divider: { height: 1, backgroundColor: '#f0f0f0', marginVertical: 12 },
-  bottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  badge: { backgroundColor: Colors.accent, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
-  typeText: { fontSize: 12, fontWeight: 'bold', color: Colors.darkBlue },
-  actions: { flexDirection: 'row', alignItems: 'center', gap: 15 },
-  windText: { fontSize: 12, color: '#666' }
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  city: { color: 'white', fontSize: 20, fontWeight: 'bold' },
+  type: { color: 'rgba(255,255,255,0.8)', fontSize: 14, marginTop: 2 },
+  temp: { color: 'white', fontSize: 42, fontWeight: '300' },
+  divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginVertical: 15 },
+  footer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  info: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  infoText: { color: 'white', fontSize: 14 }
 });

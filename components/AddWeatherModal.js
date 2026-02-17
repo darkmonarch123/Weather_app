@@ -1,132 +1,101 @@
-import { Modal, Text, View, StyleSheet, TextInput, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState } from 'react';
+import { Modal, View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from "../utils/colors";
+import { Colors } from '../utils/colors';
 
-// Theme constants to match your main screen
-const Theme = {
-  primaryBlue: '#4facfe',
-  darkBlue: '#003366',
-  accentYellow: '#FFD700',
-  white: '#FFFFFF',
-  inputBg: '#F5F7FA'
-};
+export default function AddWeatherModal({ visible, onClose, onSearch }) {
+  const [inputText, setInputText] = useState('');
 
-export default function AddWeatherModal({ open, onClose }) {
+  const handlePress = () => {
+    if (inputText.trim()) {
+      onSearch(inputText);
+      setInputText(''); // Clear input
+    }
+  };
+
   return (
-    <Modal visible={open} animationType="slide" transparent={false}>
-      <SafeAreaView style={styles.container}>
-        
-        {/* Header Section */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Add Location</Text>
-          <Pressable onPress={onClose} style={styles.closeCircle}>
-            <Ionicons name='close' size={24} color={Theme.darkBlue} />
-          </Pressable>
-        </View>
-
-        {/* Body Section */}
-        <View style={styles.content}>
-          <Text style={styles.label}>Search City</Text>
-          <View style={styles.searchSection}>
-            <Ionicons style={styles.searchIcon} name="search-outline" size={20} color="#999"/>
-            <TextInput 
-              style={styles.input}
-              placeholder="e.g. London, Tokyo..."
-              placeholderTextColor="#999"
-            />
+    <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.modalOverlay}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Add City</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={24} color="#333" />
+            </TouchableOpacity>
           </View>
 
-          {/* Add Button - Yellow Accent */}
-          <Pressable 
-            style={({pressed}) => [styles.addButton, pressed && styles.pressed]}
-            onPress={() => {
-                // Handle logic here
-                onClose();
-            }}
-          >
-            <Text style={styles.addButtonText}>Add to List</Text>
-          </Pressable>
-        </View>
+          <Text style={styles.label}>Type a city name:</Text>
+          
+          <TextInput 
+            style={styles.input}
+            placeholder="e.g. New York, London"
+            placeholderTextColor="#999"
+            value={inputText}
+            onChangeText={setInputText}
+            autoFocus={true}
+          />
 
-      </SafeAreaView>
+          <TouchableOpacity style={styles.button} onPress={handlePress}>
+            <Text style={styles.buttonText}>Search</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  modalOverlay: {
     flex: 1,
-    backgroundColor: Theme.white, // Clean white modal background
+    backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent background
+    justifyContent: 'center',
+    padding: 20
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   header: {
-    paddingHorizontal: 20,
-    paddingVertical: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEE',
+    marginBottom: 20
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: Theme.darkBlue,
-  },
-  closeCircle: {
-    backgroundColor: '#F0F0F0',
-    padding: 8,
-    borderRadius: 20,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
+    color: '#333'
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 8,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  searchSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Theme.inputBg,
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    marginBottom: 25,
-  },
-  searchIcon: {
-    marginRight: 10,
+    marginBottom: 10,
+    color: '#666'
   },
   input: {
-    flex: 1,
-    height: 50,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 12,
+    padding: 15,
     fontSize: 16,
-    color: Theme.darkBlue,
+    color: '#000', // IMPORTANT: Ensures text is black
+    marginBottom: 20
   },
-  addButton: {
-    backgroundColor: Theme.accentYellow,
-    height: 55,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // Shadow for the button
-    shadowColor: Theme.accentYellow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 4,
+  button: {
+    backgroundColor: Colors.primary,
+    padding: 15,
+    borderRadius: 12,
+    alignItems: 'center'
   },
-  addButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: Theme.darkBlue,
-  },
-  pressed: {
-    opacity: 0.8,
-    transform: [{ scale: 0.98 }]
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold'
   }
 });

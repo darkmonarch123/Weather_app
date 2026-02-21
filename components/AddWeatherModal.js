@@ -39,7 +39,7 @@ export default function AddWeatherModal({ visible, onClose, onSearch }) {
           <View style={styles.header}>
             <Text style={styles.title}>Add City</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Ionicons name="close" size={24} color="#A0A0B0" />
+              <Ionicons name="close" size={24} color="#0000" />
             </TouchableOpacity>
           </View>
 
@@ -48,7 +48,7 @@ export default function AddWeatherModal({ visible, onClose, onSearch }) {
           <TextInput 
             style={styles.input}
             placeholder="e.g. New York, London"
-            placeholderTextColor="#666677"
+            placeholderTextColor="#141416"
             value={inputText}
             onChangeText={setInputText}
             autoFocus={true}
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end', // Pushes the modal to the bottom
   },
   modalContent: {
-    backgroundColor: '#1C1C22', // Dark background matching your UI image
+    backgroundColor: '#121214', // Dark background matching your UI image
     borderTopLeftRadius: 32, // Large rounded corners at the top
     borderTopRightRadius: 32,
     paddingHorizontal: 24,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   dragHandle: {
     width: 40,
     height: 5,
-    backgroundColor: '#383842',
+    backgroundColor: '#ffffff',
     borderRadius: 3,
     alignSelf: 'center',
     marginBottom: 20,
@@ -104,9 +104,10 @@ const styles = StyleSheet.create({
     color: '#FFFFFF', // White text for dark mode
   },
   closeButton: {
-    backgroundColor: '#2A2A35',
+    backgroundColor: '#999898',
     padding: 6,
     borderRadius: 20,
+    
   },
   label: {
     marginBottom: 12,
@@ -123,18 +124,18 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   button: {
-    backgroundColor: '#4E90FF', // The vibrant blue from the image UI
+    backgroundColor: '#999898', // The vibrant blue from the image UI
     padding: 16,
     borderRadius: 16,
     alignItems: 'center',
-    shadowColor: '#4E90FF',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
   },
   buttonText: {
-    color: 'white',
+    color: 'black',
     fontSize: 16,
     fontWeight: 'bold',
   }
